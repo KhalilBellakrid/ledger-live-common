@@ -4,7 +4,12 @@ import { Observable, from, defer } from "rxjs";
 import { map } from "rxjs/operators";
 import { SyncError } from "@ledgerhq/errors";
 import { getWalletName } from "../account";
-import type { Account, CryptoCurrency, DerivationMode } from "../types";
+import type {
+  Account,
+  TokenAccount,
+  CryptoCurrency,
+  DerivationMode
+} from "../types";
 import { withLibcore } from "./access";
 import { buildAccount } from "./buildAccount";
 import { getOrCreateWallet } from "./getOrCreateWallet";
@@ -44,7 +49,8 @@ export async function syncCoreAccount({
   accountIndex,
   derivationMode,
   seedIdentifier,
-  existingAccount
+  existingAccount,
+  reorderTokenAccounts
 }: {
   core: *,
   coreWallet: *,
@@ -53,7 +59,8 @@ export async function syncCoreAccount({
   accountIndex: number,
   derivationMode: DerivationMode,
   seedIdentifier: string,
-  existingAccount?: ?Account
+  existingAccount?: ?Account,
+  reorderTokenAccounts?: (TokenAccount[]) => TokenAccount[]
 }): Promise<Account> {
   let coreOperations;
   try {
@@ -84,14 +91,16 @@ export async function syncCoreAccount({
     accountIndex,
     derivationMode,
     seedIdentifier,
-    existingAccount
+    existingAccount,
+    reorderTokenAccounts
   });
 
   return account;
 }
 
 export function syncAccount(
-  account: Account
+  account: Account,
+  reorderTokenAccounts?: (TokenAccount[]) => TokenAccount[]
 ): Observable<(Account) => Account> {
   const { derivationMode, seedIdentifier, currency } = account;
   return defer(() =>
@@ -108,7 +117,8 @@ export function syncAccount(
               accountIndex: account.index,
               derivationMode,
               seedIdentifier,
-              account
+              account,
+              reorderTokenAccounts
             })
         )
       )

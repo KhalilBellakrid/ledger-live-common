@@ -2027,3 +2027,18 @@ Object {
   ],
 }
 `;
+
+exports[`reorderTokenAccountsByCountervalues 1`] = `
+Array [
+  "NEXO",
+  "WEB",
+  "AST",
+  "B2BX",
+  "CC3",
+  "DIP",
+  "GLA",
+  "INSTAR",
+  "XCHF",
+  "XET",
+]
+`;

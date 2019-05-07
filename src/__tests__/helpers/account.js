@@ -1,9 +1,13 @@
 // @flow
 import flatMap from "lodash/flatMap";
-import { getFiatCurrencyByTicker } from "../../currencies";
+import {
+  getFiatCurrencyByTicker,
+  getCryptoCurrencyById
+} from "../../currencies";
 import {
   groupAccountOperationsByDay,
-  groupAccountsOperationsByDay
+  groupAccountsOperationsByDay,
+  reorderTokenAccountsByCountervalues
 } from "../../account";
 import { genAccount } from "../../mock/account";
 
@@ -38,6 +42,24 @@ test("groupAccountsOperationsByDay", () => {
   ).toMatchObject(
     // $FlowFixMe
     flatMap(res1.sections, s => s.data)
+  );
+});
+
+test("reorderTokenAccountsByCountervalues", () => {
+  const account = genAccount("toto", {
+    currency: getCryptoCurrencyById("ethereum"),
+    tokenAccountsCount: 10
+  });
+  const tickers = {
+    NEXO: 200000,
+    WEB: 1
+  };
+  const reordered = reorderTokenAccountsByCountervalues(tickers)(
+    account.tokenAccounts
+  );
+  expect(reordered.map(ta => ta.token.ticker)).toMatchSnapshot();
+  expect(reorderTokenAccountsByCountervalues(tickers)(reordered)).toBe(
+    reordered
   );
 });
 

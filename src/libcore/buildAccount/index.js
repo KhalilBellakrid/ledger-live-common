@@ -6,7 +6,12 @@ import {
   getAccountPlaceholderName,
   getNewAccountPlaceholderName
 } from "../../account";
-import type { Account, CryptoCurrency, DerivationMode } from "../../types";
+import type {
+  Account,
+  CryptoCurrency,
+  DerivationMode,
+  TokenAccount
+} from "../../types";
 import { libcoreAmountToBigNumber } from "../buildBigNumber";
 import type { CoreWallet, CoreAccount, CoreOperation } from "../types";
 import { buildOperation } from "./buildOperation";
@@ -21,7 +26,8 @@ export async function buildAccount({
   accountIndex,
   derivationMode,
   seedIdentifier,
-  existingAccount
+  existingAccount,
+  reorderTokenAccounts
 }: {
   coreWallet: CoreWallet,
   coreAccount: CoreAccount,
@@ -30,7 +36,8 @@ export async function buildAccount({
   accountIndex: number,
   derivationMode: DerivationMode,
   seedIdentifier: string,
-  existingAccount: ?Account
+  existingAccount: ?Account,
+  reorderTokenAccounts?: (TokenAccount[]) => TokenAccount[]
 }) {
   const nativeBalance = await coreAccount.getBalance();
   const balance = await libcoreAmountToBigNumber(nativeBalance);
@@ -81,12 +88,16 @@ export async function buildAccount({
     derivationMode
   });
 
-  const tokenAccounts = await buildTokenAccounts({
+  let tokenAccounts = await buildTokenAccounts({
     currency,
     coreAccount,
     accountId,
     existingAccount
   });
+
+  if (tokenAccounts && reorderTokenAccounts) {
+    tokenAccounts = reorderTokenAccounts(tokenAccounts);
+  }
 
   const operations = await minimalOperationsBuilder(
     (existingAccount && existingAccount.operations) || [],
