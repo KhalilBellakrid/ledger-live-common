@@ -46,13 +46,37 @@ export const createAccountFromDevice: F = async ({
     Promise.resolve()
   );
 
-  const newAccountCreationInfos = await core.AccountCreationInfo.init(
-    index,
-    owners,
-    derivations,
-    publicKeys,
-    chainCodes
-  );
-  const account = await wallet.newAccountWithInfo(newAccountCreationInfos);
+  let account;
+  if (currency.id === "cosmos") {
+    //MEGA hack
+    //const finalPubKey = Buffer.from(publicKeys[1], 'hex').toString('hex');
+    const finalPubKey = "cosmospub1addwnpepqdtwj8njf68zedmfhzru54tg2475nnfjrrgtfd533prvs7sljk7nzxvtkpd";
+    const finalDerivations = derivations[1];
+    const finalOwner = owners[1];
+    console.log("########");
+    console.log(finalDerivations);
+    console.log(finalPubKey);
+    console.log(finalOwner);
+    console.log("########");
+    const newExtenderKeyAccountCreationInfos = await core.ExtendedKeyAccountCreationInfo.init(
+      index,
+      [finalOwner],
+      [finalDerivations],
+      [finalPubKey]
+    );
+    console.log("#### Creating account");
+    account = await wallet.newAccountWithExtendedKeyInfo(newExtenderKeyAccountCreationInfos);
+    console.log("#### !!!!! Account created");
+  } else {
+    const newAccountCreationInfos = await core.AccountCreationInfo.init(
+      index,
+      owners,
+      derivations,
+      publicKeys,
+      chainCodes
+    );
+    account = await wallet.newAccountWithInfo(newAccountCreationInfos);
+  }
+
   return account;
 };

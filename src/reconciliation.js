@@ -37,19 +37,22 @@ export async function minimalOperationsBuilder<CO>(
   coreOperations: CO[],
   buildOp: (coreOperation: CO) => Promise<?Operation>
 ): Promise<Operation[]> {
+  console.log("#### minimalOperationsBuilder");
   if (existingOperations.length === 0 && coreOperations.length === 0) {
     return existingOperations;
   }
   let operations = [];
   let existingOps = existingOperations || [];
-
+console.log("#### minimalOperationsBuilder 0 ");
   let immutableOpCmpDoneOnce = false;
   for (let i = coreOperations.length - 1; i >= 0; i--) {
     const coreOperation = coreOperations[i];
+    console.log("#### minimalOperationsBuilder 1 ");
     const newOp = await buildOp(coreOperation);
     if (!newOp) continue;
+    console.log("#### minimalOperationsBuilder 2 ");
     const existingOp = findExistingOp(existingOps, newOp);
-
+console.log("#### minimalOperationsBuilder 3 ");
     if (existingOp && !immutableOpCmpDoneOnce) {
       // an Operation is supposely immutable.
       if (existingOp.blockHeight !== newOp.blockHeight) {
@@ -69,7 +72,7 @@ export async function minimalOperationsBuilder<CO>(
         }
       }
     }
-
+console.log("#### minimalOperationsBuilder 4 ");
     if (existingOp) {
       // as soon as we've found a first matching op in old op list,
       const j = existingOps.indexOf(existingOp);
@@ -95,6 +98,7 @@ export async function minimalOperationsBuilder<CO>(
       operations.push(newOp);
     }
   }
+  console.log("#### minimalOperationsBuilder End");
   return operations;
 }
 
@@ -104,6 +108,8 @@ export function minimalOperationsBuilderSync<CO>(
   coreOperations: CO[],
   buildOp: (coreOperation: CO) => ?Operation
 ): Operation[] {
+
+  console.log("#### minimalOperationsBuilderSync");
   if (existingOperations.length === 0 && coreOperations.length === 0) {
     return existingOperations;
   }
@@ -146,6 +152,7 @@ export function minimalOperationsBuilderSync<CO>(
       operations.push(newOp);
     }
   }
+  console.log("#### minimalOperationsBuilderSync End");
   return operations;
 }
 

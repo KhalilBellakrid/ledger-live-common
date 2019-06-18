@@ -36,6 +36,10 @@ async function scanNextAccount(props: {
   isUnsubscribed: () => boolean,
   emptyCount?: number
 }) {
+  console.log("$$$$$######");
+  console.log(accountIndex);
+  console.log("$$$$$######");
+
   const {
     core,
     wallet,
@@ -104,6 +108,10 @@ async function scanNextAccount(props: {
     : isIterableDerivationMode(derivationMode);
 
   if (shouldIter) {
+    console.log("!!!!!!!!!!!!");
+    console.log(shouldIter);
+    console.log(derivationMode);
+    console.log("!!!!!!!!!!!!");
     await scanNextAccount({
       ...props,
       accountIndex: accountIndex + 1,

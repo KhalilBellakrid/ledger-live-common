@@ -29,27 +29,27 @@ export async function buildOperation(arg: {
 
   const coreValue = await coreOperation.getAmount();
   let value = await libcoreAmountToBigNumber(coreValue);
-
+console.log(" >>> Got Amount");
   const coreFee = await coreOperation.getFees();
   if (!coreFee) throw new Error("fees should not be null");
   const fee = await libcoreAmountToBigNumber(coreFee);
-
+console.log(" >>> Got Fees");
   if (type === "OUT") {
     value = value.plus(fee);
   }
 
   const blockHeight = await coreOperation.getBlockHeight();
-
+console.log(" >>> Got block height");
   const [recipients, senders] = await Promise.all([
     coreOperation.getRecipients(),
     coreOperation.getSenders()
   ]);
-
+console.log(" >>> Got Senders");
   const date = new Date(await coreOperation.getDate());
 
   const rest = await buildOp(arg);
   const id = `${accountId}-${rest.hash}-${type}`;
-
+console.log(" >>> Got build op");
   const op: $Exact<Operation> = {
     id,
     type,

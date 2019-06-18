@@ -9,6 +9,7 @@ import * as EthereumJSBridge from "./EthereumJSBridge";
 import LibcoreCurrencyBridge from "./LibcoreCurrencyBridge";
 import LibcoreBitcoinAccountBridge from "./LibcoreBitcoinAccountBridge";
 import LibcoreEthereumAccountBridge from "./LibcoreEthereumAccountBridge";
+import LibcoreCosmosAccountBridge from "./LibcoreCosmosAccountBridge";
 import {
   makeMockCurrencyBridge,
   makeMockAccountBridge
@@ -29,6 +30,8 @@ export const getCurrencyBridge = (currency: CryptoCurrency): CurrencyBridge => {
       return EthereumJSBridge.currencyBridge;
     case "bitcoin":
       return LibcoreCurrencyBridge;
+    case "cosmos":
+      return LibcoreCurrencyBridge;
     default:
       return mockCurrencyBridge; // fallback mock until we implement it all!
   }
@@ -40,6 +43,11 @@ export const getAccountBridge = (account: Account): AccountBridge<any> => {
   if (type === "libcore") {
     if (account.currency.family === "ethereum") {
       return LibcoreEthereumAccountBridge;
+    } else if (account.currency.family === "cosmos") {
+      console.log("##############");
+      console.log(account.currency);
+      console.log("##############");
+      return LibcoreCosmosAccountBridge;
     }
     return LibcoreBitcoinAccountBridge;
   }

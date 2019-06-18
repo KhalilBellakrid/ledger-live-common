@@ -45,6 +45,7 @@ declare class CoreWallet {
   ): Promise<CoreAccountCreationInfo>;
   getNextAccountCreationInfo(): Promise<CoreAccountCreationInfo>;
   newAccountWithInfo(info: CoreAccountCreationInfo): Promise<CoreAccount>;
+  newAccountWithExtendedKeyInfo(info: ExtendedKeyAccountCreationInfo): Promise<CoreAccount>;
   getCurrency(): Promise<CoreCurrency>;
   getAccount(index: number): Promise<CoreAccount>;
   getExtendedKeyAccountCreationInfo(
@@ -362,6 +363,9 @@ export const reflect = (declare: (string, Spec) => void) => {
       asEthereumLikeAccount: {
         returns: "EthereumLikeAccount"
       },
+      asCosmosLikeAccount: {
+        returns: "CosmosLikeAccount"
+      },
       synchronize: {
         returns: "EventBus"
       },
@@ -379,6 +383,9 @@ export const reflect = (declare: (string, Spec) => void) => {
       },
       asEthereumLikeOperation: {
         returns: "EthereumLikeOperation"
+      },
+      asCosmosLikeOperation: {
+        returns: "CosmosLikeOperation"
       },
       getOperationType: {},
       getAmount: { returns: "Amount" },

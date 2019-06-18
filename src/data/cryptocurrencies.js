@@ -2396,6 +2396,46 @@ const cryptocurrenciesById: { [name: string]: CryptoCurrency } = {
       }
     ]
   },
+  cosmos: {
+    type: "CryptoCurrency",
+    id: "cosmos",
+    coinType: 118,
+    name: "Cosmos",
+    managerAppName: "Cosmos",
+    ticker: "ATOM",
+    scheme: "cosmos",
+    color: "#3790ca",
+    family: "cosmos",
+    blockAvgTime: 10,
+    units: [
+      {
+        name: "atom",
+        code: "atom",
+        magnitude: 9
+      },
+      {
+        name: "matom",
+        code: "matom",
+        magnitude: 6
+      },
+      {
+        name: "uatom",
+        code: "uatom",
+        magnitude: 3
+      },
+      {
+        name: "natom",
+        code: "natom",
+        magnitude: 0
+      }
+    ],
+    explorerViews: [
+      {
+        tx: "https://www.mintscan.io/txs/$hash",
+        address: "https://www.mintscan.io/account/$address"
+      }
+    ]
+  },
   ethereum_ropsten: {
     type: "CryptoCurrency",
     id: "ethereum_ropsten",
@@ -2489,3 +2529,26 @@ export function getCryptoCurrencyById(id: string): CryptoCurrency {
   }
   return currency;
 }
+
+const cosmosUnits = (name, code) => [
+  {
+    name,
+    code,
+    magnitude: 9
+  },
+  {
+    name: "matom",
+    code: "matom",
+    magnitude: 6
+  },
+  {
+    name: "uatom",
+    code: "uatom",
+    magnitude: 3
+  },
+  {
+    name: "natom",
+    code: "natom",
+    magnitude: 0
+  }
+];

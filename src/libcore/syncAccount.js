@@ -57,6 +57,9 @@ export async function syncCoreAccount({
 }): Promise<Account> {
   let coreOperations;
   try {
+    console.log("@@@@@@@@@@@@@");
+    console.log("syncCoreAccount");
+    console.log("@@@@@@@@@@@@@");
     const eventReceiver = await core.EventReceiver.newInstance();
     const eventBus = await coreAccount.synchronize();
     const serialContext = await core
@@ -64,7 +67,9 @@ export async function syncCoreAccount({
       .getMainExecutionContext();
 
     await eventBus.subscribe(serialContext, eventReceiver);
-
+    console.log("########");
+    console.log(" >> Get Operations");
+    console.log("########");
     const query = await coreAccount.queryOperations();
     const completedQuery = await query.complete();
     const sortedQuery = await completedQuery.addOrder(
@@ -72,10 +77,12 @@ export async function syncCoreAccount({
       false
     );
     coreOperations = await sortedQuery.execute();
+    console.log("########");
+    console.log(" >> Gooooot Operations");
+    console.log("########");
   } catch (e) {
     throw remapLibcoreErrors(new SyncError(e.message));
   }
-
   const account = await buildAccount({
     coreWallet,
     coreAccount,
@@ -87,6 +94,9 @@ export async function syncCoreAccount({
     existingAccount
   });
 
+  console.log("########");
+  console.log(" >> Account build");
+  console.log("########");
   return account;
 }
 
